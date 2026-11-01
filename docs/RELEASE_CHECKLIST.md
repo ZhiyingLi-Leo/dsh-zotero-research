@@ -7,7 +7,7 @@
 - [ ] Isolated profile install from the tarball works; `/dsh-zotero-research/status` returns version 1.0.0-beta.3.
 - [ ] Backup export/preview/restore tested in the isolated profile.
 - [ ] Research Markdown export tested.
-- [ ] README has no personal paths, real item keys or process logs.
+- [ ] README and screenshots contain no credentials, private notes, unpublished material or personal filesystem paths. Real screenshots of published-paper workflows require maintainer authorization.
 - [ ] LICENSE, CHANGELOG, CONTRIBUTING, SECURITY, issue template present.
-- [ ] Fill repository URL and security contact before any public release.
-- [ ] Do **not** git push, create a remote, publish an npm package, create an online release or upload papers/library data.
+- [ ] Repository, homepage, issue URL and security reporting instructions are populated.
+- [ ] Public distribution is authorized by the maintainer. Never upload credentials, library backups or private paper attachments.

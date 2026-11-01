@@ -1,9 +1,7 @@
 # Security
 
-Please do not open a public issue for vulnerabilities that expose credentials, local file paths, library contents or model keys.
+Do not post tokens, Zotero authorization keys, private PDFs, library backups, or sensitive notes in public issues.
 
-- Report privately to the maintainer contact **to be filled in before publishing**.
-- Include: affected version (1.0.0-beta.1), macOS/Harness versions, reproduction steps and impact. Do not attach real papers or Zotero databases.
-- The plugin stores the Zotero write key in DSH storage with restricted permissions; backups and diagnostics exclude it.
-- No telemetry, no background full-library upload, no automatic system-tool installation.
-- This beta is not an official DeepSeek or Zotero product.
+Use **Security → Report a vulnerability** when private reporting is available. Otherwise open a minimal issue requesting a private reporting channel, without exploit details or sensitive data.
+
+The plugin connects to Zotero's local API. Writes require Zotero authorization; backups exclude auth keys and settings. Model calls send the materials selected for the requested operation. See [data and privacy](docs/GETTING_STARTED.md#data-and-privacy).

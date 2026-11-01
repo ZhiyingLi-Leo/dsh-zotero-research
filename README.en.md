@@ -1,128 +1,68 @@
-# dsh-zotero-research
+# Zotero Research
 
-[中文](README.md) | **English**
+**Read Zotero papers in DeepSeek Harness. Keep the evidence, questions, and useful notes connected.**
 
-A Zotero research-reading workbench inside DeepSeek Harness: layered reading, evidence checks, research questions, conversation hand-off and write-back. Zotero remains the place for full PDF reading and native annotations; this is **not** a Zotero XPI.
+[中文](README.md) · [Getting started](docs/GETTING_STARTED.md#english) · [Issues](https://github.com/ZhiyingLi-Leo/dsh-zotero-research/issues) · [Contributing](CONTRIBUTING.md)
 
-- Version: **1.0.0-beta.3**
-- Repository: https://github.com/ZhiyingLi-Leo/dsh-zotero-research
-- Package: `packages/dsh-zotero-research-1.0.0-beta.3.tgz`
-- No public npm release and no market listing.
+Reading a paper is only part of the work. You still need to check its claims, question the method, compare related work, and keep notes you can use later. Zotero Research connects that workflow: **paper → layered reading → source evidence → conversation → notes and research questions**.
 
-## Screenshots
+Package: `dsh-zotero-research`. Zotero manages the library and full PDF reading; Harness provides analysis and conversation.
 
-*Synthetic demo data only*
+![Actual paper analysis with page coverage, synthesis, and open questions](docs/images/reading-real.jpg)
 
-![Reader overview](docs/images/reading.jpg)
+*An actual reading session: results from multiple page ranges are combined while coverage, evidence, and unresolved questions remain visible.*
 
-![Evidence preview](docs/images/evidence.jpg)
+## From reading to understanding
 
-![Research questions](docs/images/research.jpg)
+| What you need | What the plugin provides |
+|---|---|
+| Decide what deserves attention | Search, thematic organization, a reading queue, priorities, and quick screening of questions and contributions |
+| Understand methods and conclusions | Rough/deep reading, continuation across page ranges, synthesis, equations, figure conditions, limitations, and reproduction details |
+| Check whether an answer has evidence | PDF excerpts and page references, separate source text and AI explanations, and opening the paper in Zotero |
+| Follow a question further | Bring papers, sections, evidence, or annotations into real Harness conversations; compare papers and explore their relationships |
+| Keep useful research progress | Save edited results to Zotero notes, or collect evidence, stances, understanding, and next steps around a research question |
 
-Captured from an isolated demo profile with a synthetic Zotero mock and synthetic records. See [demo/README.md](demo/README.md).
+## Follow a claim back to its source
 
-## Features
+Open an evidence card to compare the PDF excerpt, extracted quotation, and explanation. The preview is for checking a passage. Open Zotero for full reading and native highlights or comments.
 
-- Quick/rough/deep reading with actual page coverage, missing ranges and an honest "partial text" basis.
-- Unified synthesis with batch conflicts, open uncertainties and verifiable quotes.
-- Evidence crop/page preview, location labels and Zotero opening; page-only when exact location is unavailable.
-- Research questions with material stances, understanding, open questions, next actions and evolution.
-- Hand-off to real Harness conversations from a paper, section, evidence, annotation or comparison.
-- Zotero notes/annotations read/write with conflict protection; Markdown export with provenance.
-- Plugin-data backup/restore for research questions, analyses, Q&A and queue; excludes auth keys, settings and cache.
+![An actual PDF excerpt, quotation, and explanation on page 11](docs/images/evidence-real.jpg)
 
-## Platform capability
+## Continue the conversation with the right context
 
-| Capability | macOS arm64 | Windows | Linux |
-|---|---|---|---|
-| PDF.js text, pages, quote location, PDF rects | yes | yes | yes |
-| PDFKit image rendering (evidence crop) | optional helper (macOS 13+) | text evidence | text evidence |
-| Open in Zotero | `open -a Zotero` | `rundll32 url.dll,FileProtocolHandler` | `xdg-open` |
-| Precise write-back on rotated pages | page-only | page-only | page-only |
+For example: **“Does this IoU result mean the method can transfer directly to another soft robot?”**
 
-PDF text and coordinates use PDF.js on all platforms; image preview is an optional macOS enhancement and never blocks text evidence or Zotero opening. Real GUI/CI acceptance boundaries are in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
+Choose the paper, quotation, and explanation to include, review the materials, then send them to a new or existing conversation. Edit and save useful results back to the paper, and connect evidence and conversations to an ongoing research question.
 
-## Requirements
+![Bringing an actual paper excerpt into a Harness conversation](docs/images/conversation-real.jpg)
 
-- DeepSeek Harness `>=0.2.1-rc.5 <0.3.0` and Zotero Desktop with the local API enabled.
-- Source development uses Node.js 20 or 24 and pnpm **10.17.0**, matching CI; installing the tgz does not require compilation.
+*Screenshots show a real reading session with a published paper. The conversation view shows the materials before sending.*
 
 ## Install
 
-Local package:
+Requires **DeepSeek Harness `>=0.2.1-rc.5 <0.3.0`** and Zotero Desktop with its local API enabled.
+
+Download the [prebuilt package](packages/dsh-zotero-research-1.0.0-beta.3.tgz) and install it into the Harness profile you use:
 
 ```sh
-dsh plugin --profile <profile> add /absolute/path/dsh-zotero-research-1.0.0-beta.3.tgz
+dsh plugin --profile <profile> add /path/to/dsh-zotero-research-1.0.0-beta.3.tgz
 ```
 
-Future npm (example, not published):
+Restart Harness, open **Zotero → Settings**, check the connection, model, and write authorization, then select a paper.
 
-```sh
-dsh plugin --profile <profile> add @scope/dsh-zotero-research@beta
-```
+npm distribution is being prepared. After publication, the command will be `dsh plugin --profile <profile> add dsh-zotero-research@beta`. See [Getting started](docs/GETTING_STARTED.md#english) for installation, upgrading from the old package, and removal.
 
-`npm install` only adds a package to a Node project; it does not activate a plugin in a Harness profile. Web and desktop use their own profiles.
+## Platforms and data
 
-## Uninstall
+- **macOS, Windows, and Linux** share PDF.js text extraction, page counting, and quote location.
+- **PDF image preview** uses the optional macOS 13+ arm64 PDFKit helper. Other environments retain text evidence and Zotero opening.
+- Writing notes, annotations, or collections requires Zotero authorization. Plugin records stay local and can be exported as Markdown or backed up as JSON; there is no cloud library sync.
+- Model calls send the materials needed for the requested operation and may incur provider charges. The plugin does not upload the whole library in the background or send the Zotero authorization key or PDF file itself.
 
-```sh
-dsh plugin --profile <profile> remove dsh-zotero-research
-```
+[Data and privacy](docs/GETTING_STARTED.md#data-and-privacy) · [CI and desktop acceptance](docs/ACCEPTANCE.md) · [Security](SECURITY.md)
 
-## Upgrade (keep data)
+## Contribute
 
-1. Export a plugin-data backup.
-2. Quit Harness normally.
-3. Remove the old dependency:
-   ```sh
-   dsh plugin --profile <profile> remove dsh-zotero
-   ```
-4. Install the new package:
-   ```sh
-   dsh plugin --profile <profile> add /absolute/path/dsh-zotero-research-1.0.0-beta.3.tgz
-   ```
-5. If a desktop profile's `cordis.patch.yml` contains a hand-written old layer `id/name: dsh-zotero`, replace only that plugin block with `dsh-zotero-research`; keep other plugins and config. Never run both blocks together.
-6. Restart Harness. Do not delete `storages/zotero-plugin`.
+Share reproducible issues, workflow ideas, and suggestions through [Issues](https://github.com/ZhiyingLi-Leo/dsh-zotero-research/issues). Build and contribution instructions are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The storage directory, legacy backup format `dsh-zotero-backup`, Zotero tags `dsh-zotero`/`dsh-zotero:ai` and localStorage preference keys remain compatible. No automatic migration; restore only merges and never overwrites existing records.
-
-## Workflow
-
-1. Open the Zotero panel → Settings to check Zotero/local API, model, PDF capability and write authorization.
-2. Pick a paper and run quick/rough/deep reading; the preflight shows model, actual page range and data scope.
-3. Open evidence for the quoted excerpt; use Zotero for full reading or native highlights.
-4. Ask about a conclusion/method/limitation, or take evidence/annotations into a real conversation.
-5. Accumulate research-question materials, update understanding, then save results to Zotero or export Markdown.
-
-## Privacy and cost
-
-- Only when you press analyze/synthesis/compare/relations/ask does the plugin send paper metadata, abstract, selected pages, focus and necessary history; notes/annotations/evidence/synthesis are sent only when you bring them in.
-- It does not send the Zotero auth key, the PDF attachment file, passwords or other credentials; no telemetry or background full-library upload.
-- Provider retention is governed by that provider's policy; no unverified guarantee is made.
-- Model calls may cost money; no amount is fabricated. Compare/relations limits (6/8) are shown before sending.
-
-## Backup and restore
-
-Settings → Backup & restore exports plugin-data JSON (research questions, combined analyses, Q&A, queue). Preview conflicts, then merge by primary key without overwriting human content. This is not a Zotero library/PDF backup and excludes conversation bodies, compare/relation results, auth keys, settings and cache.
-
-## Development
-
-Clean-source order (the source tarball intentionally omits the generated `client/client.js`):
-
-```sh
-pnpm install
-node client/build.mjs
-node scripts/check.mjs
-node scripts/pack.mjs
-node scripts/install-check.mjs
-```
-
-`scripts/pack.mjs` prefers `DSH_PNPM`/`npm_execpath`/Harness's bundled pnpm JS entry. On Windows it resolves a `.CMD` shim to the real pnpm JS entry and only falls back to `cmd.exe` with a complete verbatim command when necessary. Synthetic demo: [demo/README.md](demo/README.md).
-
-## Feedback and license
-
-- Issues: `.github/ISSUE_TEMPLATE/bug_report.md`; security: [SECURITY.md](SECURITY.md); contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
-- Acceptance boundaries: [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
-- License: MIT, see [LICENSE](LICENSE).
-
-[中文](README.md)
+MIT License · [LICENSE](LICENSE)

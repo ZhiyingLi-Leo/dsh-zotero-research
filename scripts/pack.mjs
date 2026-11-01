@@ -93,9 +93,9 @@ const stage = join(tmpdir(), `${pkgName}-source-${process.pid}`)
 rmSync(stage, { recursive: true, force: true })
 mkdirSync(join(stage, pkgName), { recursive: true })
 const target = join(stage, pkgName)
-const files = ['package.json', 'README.md', 'README.en.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
+const files = ['package.json', 'screenshots.json', 'README.md', 'README.en.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
 for (const file of files) cpSync(join(root, file), join(target, file))
-for (const dir of ['lib', 'scripts', 'docs', 'examples', '.github', 'licenses']) cpSync(join(root, dir), join(target, dir), { recursive: true })
+for (const dir of ['lib', 'scripts', 'docs', 'examples', '.github', 'licenses', 'demo']) cpSync(join(root, dir), join(target, dir), { recursive: true })
 cpSync(join(root, 'client', 'src'), join(target, 'client', 'src'), { recursive: true })
 cpSync(join(root, 'client', 'build.mjs'), join(target, 'client', 'build.mjs'))
 mkdirSync(join(target, 'build'), { recursive: true })

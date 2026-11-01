@@ -49,6 +49,6 @@ Thumbs.db
 !examples/*.json
 !examples/*.md
 
-# Generated bundle and reviewed local installer
-/client/client.js
+# The client bundle is tracked for direct GitHub installation.
+# Reviewed local installer
 !packages/dsh-zotero-research-1.0.0-beta.3.tgz

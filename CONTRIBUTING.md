@@ -1,12 +1,23 @@
 # Contributing
 
-Thanks for helping improve dsh-zotero-research.
+Use [Issues](https://github.com/ZhiyingLi-Leo/dsh-zotero-research/issues) for reproducible bugs and workflow suggestions. Do not include credentials, private papers, notes, or library backups.
 
-- Use issues for bugs and proposals; keep reports free of credentials, private paper text and personal paths.
-- For code changes: `pnpm install`, `pnpm build`, run a focused manual check in an isolated DSH profile, and keep the true Zotero library untouched.
-- Do not commit `node_modules`, build artifacts other than the helper, state/cache, PDFs, backups or `.env` files.
-- Do not add telemetry, background uploads, new permissions or global settings changes without an explicit design discussion.
-- Preserve the existing write authorization, read-back verification and conflict protection.
-- The maintainer/repository address is not yet published; use the issue template and state what you can reproduce.
+## Build and test
 
-All contributions are under the MIT license.
+Node.js 20 or 24 and pnpm 10.17.0 match the CI toolchain.
+
+```sh
+pnpm install --frozen-lockfile
+node client/build.mjs
+node scripts/check.mjs
+node scripts/pack.mjs
+node scripts/install-check.mjs
+```
+
+The generated client is committed so direct GitHub installs work without an install-time build. Rebuild it when changing `client/src/`. The npm package is prebuilt; consumers do not need esbuild. The optional PDFKit helper is macOS-specific and has its Swift source under `scripts/`.
+
+Keep existing storage and note provenance compatible. Use synthetic fixtures for write tests. Preserve the safeguards for credentials, private library files, overwrite conflicts, and backup validation.
+
+Changes to the reading workflow should be checked in the actual UI. CI covers the macOS/Windows/Linux Node matrix; the [acceptance record](docs/ACCEPTANCE.md) records its scope and links.
+
+Publishing instructions: [docs/PUBLISHING.md](docs/PUBLISHING.md). Licensing: [MIT](LICENSE).

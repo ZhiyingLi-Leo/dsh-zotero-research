@@ -5,19 +5,19 @@ title: "[bug] "
 labels: bug
 ---
 
-**Version**: 1.0.0-beta.1  
-**macOS / architecture**:  
-**DSH build**:  
-**Zotero version**:  
+**Package version**:
+**OS / architecture**:
+**DSH build**:
+**Zotero version**:
 
-**What happened** (no paper text, keys, paths or credentials):  
+**What happened** (no paper text, keys, paths or credentials):
 
-**Steps to reproduce**:  
-1.  
-2.  
+**Steps to reproduce**:
+1.
+2.
 
-**Expected**:  
+**Expected**:
 
-**Logs/diagnostics** (redact paths, keys and paper content):  
+**Logs/diagnostics** (redact paths, keys and paper content):
 
 **Did you try the isolated profile?** yes/no

@@ -30,7 +30,9 @@ Earlier failures identified a Node 20/pnpm 11 mismatch, esbuild build approval c
 
 ## Screenshots / 功能图片
 
-`docs/images/reading.jpg`, `evidence.jpg`, and `research.jpg` are unmodified screenshots of the real plugin UI running in an isolated Harness profile. The library, PDF and records are synthetic. They contain no real research records or credentials. The evidence image demonstrates the optional macOS PDFKit preview. See the repository's `demo/README.md` for the synthetic fixture setup.
+The README uses real screenshots of the installed plugin reading a published paper. They show a combined reading result, an original PDF excerpt, and materials selected before sending a question. The question in the conversation launcher is an unsent example. No authorization key, private note, or conversation body is included.
+
+真实截图取自已发表论文的实际阅读结果，展示综合阅读、原文核对和发送前的材料确认。截图中的示例问题没有发送给模型。
 
 ## Distribution / 分发状态
 

@@ -24,14 +24,18 @@
     "docs",
     "examples",
     "licenses",
-    "README.en.md"
+    "README.en.md",
+    "screenshots.json"
   ],
   "license": "MIT",
   "keywords": [
-    "dsh",
+    "deepseek-harness",
     "dsh-plugin",
     "zotero",
-    "literature"
+    "research",
+    "literature-review",
+    "pdf",
+    "annotations"
   ],
   "dsh": {
     "bundle": {
@@ -45,7 +49,9 @@
     "build": "node client/build.mjs",
     "build:helper": "sh scripts/build-pdfkit.sh",
     "pack": "node scripts/pack.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/check.mjs",
+    "check:package": "node scripts/install-check.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2"
@@ -56,5 +62,19 @@
   "engines": {
     "node": ">=20.0.0",
     "dsh": ">=0.2.1-rc.5 <0.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZhiyingLi-Leo/dsh-zotero-research.git"
+  },
+  "homepage": "https://github.com/ZhiyingLi-Leo/dsh-zotero-research#readme",
+  "bugs": {
+    "url": "https://github.com/ZhiyingLi-Leo/dsh-zotero-research/issues"
+  },
+  "author": "ZhiyingLi-Leo",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "tag": "beta"
   }
 }
