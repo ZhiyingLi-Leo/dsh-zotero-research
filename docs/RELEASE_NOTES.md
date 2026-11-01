@@ -6,7 +6,7 @@ Highlights: first-run checks and model selection; preflight showing model/pages/
 
 Install: `dsh plugin --profile <profile> add /path/dsh-zotero-research-1.0.0-beta.3.tgz`, then restart DSH. A bare `npm install` only adds a dependency and does not activate the plugin.
 
-Standard packages: real `pnpm pack` tarball + Node-written source tarball. PDF text/coordinates use PDF.js on macOS/Windows/Linux; PDFKit image rendering is macOS-only and optional. macOS UI was tested on one machine; Windows/Linux are adapted but not hardware-tested.
+Standard packages: real `pnpm pack` tarball + Node-written source tarball. PDF text/coordinates use PDF.js on macOS/Windows/Linux; PDFKit image rendering is macOS-only and optional. Platform capabilities are listed in the README; automated CI and desktop GUI evidence are recorded separately in docs/ACCEPTANCE.md.
 
 Not included: Zotero XPI, OCR, chart detection, real-time selection, Intel support claim.
 

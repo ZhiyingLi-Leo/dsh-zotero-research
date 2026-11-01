@@ -14,4 +14,4 @@ DSH_HOME=/tmp/zp-demo-home node demo/seed.mjs
 DSH_HOME=/tmp/zp-demo-home dsh --profile demo --no-open --port 3986
 ```
 
-The mock serves paper `DEMO0001`, attachment `DEMOPDF1`, one note and one annotation, a synthetic fulltext and a generated PDF at `/tmp/dsh-zotero-research-demo.pdf`. Capture `reader-overview.png`, `evidence-preview.png` and `research-questions.png` into `docs/images/`.
+The mock serves paper `DEMO0001`, attachment `DEMOPDF1`, one note and one annotation, a synthetic fulltext and a generated PDF at `/tmp/dsh-zotero-research-demo.pdf`. Capture `reading.jpg`, `evidence.jpg` and `research.jpg` into `docs/images/`.

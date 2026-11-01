@@ -42,6 +42,11 @@ DeepSeek Harness 中的 Zotero 科研阅读工作台：分层阅读、证据核�
 
 PDF 文字与坐标由 PDF.js 提供（三端同一实现）；图像预览是 macOS 的可选增强，缺失时不影响文字证据和 Zotero 跳转。真实 GUI/CI 验收边界见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)。
 
+## 环境要求
+
+- DeepSeek Harness `>=0.2.1-rc.5 <0.3.0`，Zotero Desktop 已启用本地 API。
+- 从源码开发使用 Node.js 20 或 24、pnpm **10.17.0**（与 CI 一致）；仅安装 tgz 无需编译。
+
 ## 安装
 
 本地包：

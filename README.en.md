@@ -42,6 +42,11 @@ Captured from an isolated demo profile with a synthetic Zotero mock and syntheti
 
 PDF text and coordinates use PDF.js on all platforms; image preview is an optional macOS enhancement and never blocks text evidence or Zotero opening. Real GUI/CI acceptance boundaries are in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
 
+## Requirements
+
+- DeepSeek Harness `>=0.2.1-rc.5 <0.3.0` and Zotero Desktop with the local API enabled.
+- Source development uses Node.js 20 or 24 and pnpm **10.17.0**, matching CI; installing the tgz does not require compilation.
+
 ## Install
 
 Local package:
