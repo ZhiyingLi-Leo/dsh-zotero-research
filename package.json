@@ -1,0 +1,64 @@
+{
+  "name": "dsh-zotero",
+  "version": "1.0.0-beta.2",
+  "description": "Zotero research reading workbench for DeepSeek Harness: layered reading, evidence checks, conversations, research questions and write-back.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib",
+    "client/client.js",
+    "build",
+    "scripts",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docs",
+    "examples",
+    "licenses"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "zotero",
+    "literature"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "build": "node client/build.mjs",
+    "build:helper": "sh scripts/build-pdfkit.sh",
+    "pack": "node scripts/pack.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "pdfjs-dist": "4.10.38"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "dsh": ">=0.2.1-rc.5 <0.3.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

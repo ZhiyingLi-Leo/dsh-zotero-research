@@ -1,0 +1,52 @@
+# Dependencies and build output
+node_modules/
+dist/
+build/.swift-module-cache/
+.swift-module-cache/
+*.tgz
+*.tar.gz
+*.zip
+
+# Local plugin data (never commit)
+.dsh/
+**/storages/zotero-plugin/
+state.json
+analyses.json
+ask.json
+research.json
+*.backup.json
+dsh-zotero-backup-*.json
+.restore-*/
+*.rollback.tmp
+*.tmp
+
+# Credentials and environment
+.env
+.env.*
+*.key
+*.pem
+credentials*
+*.credentials.yaml
+secrets*
+auth.json
+
+# Papers and local library data
+*.pdf
+*.epub
+*.docx
+*.caj
+Zotero/
+**/storage/*.pdf
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Synthetic, sanitized samples may be committed
+!examples/*.json
+!examples/*.md
+
+# Reviewed local beta installer
+!packages/dsh-zotero-1.0.0-beta.2.tgz

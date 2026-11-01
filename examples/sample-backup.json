@@ -1,0 +1,95 @@
+{
+  "format": "dsh-zotero-backup",
+  "version": 1,
+  "appVersion": "1.0.0-beta.1",
+  "exportedAt": "2026-01-01T00:00:00.000Z",
+  "data": {
+    "queue": {
+      "TEST0001": {
+        "status": "reading",
+        "priority": 2
+      }
+    },
+    "analyses": [
+      {
+        "key": "TEST0001",
+        "mode": "quick",
+        "focus": "example focus",
+        "analysis": {
+          "key": "TEST0001",
+          "mode": "quick",
+          "parsed": {
+            "question": "Synthetic demo question",
+            "contribution": "Synthetic demo contribution"
+          },
+          "evidence": [
+            {
+              "quote": "Synthetic quote for layout testing",
+              "page": 1,
+              "verified": true,
+              "precision": "text",
+              "why": "Synthetic support"
+            }
+          ],
+          "coverage": {
+            "pagesTotal": 2,
+            "readFrom": 1,
+            "readTo": 1
+          }
+        }
+      }
+    ],
+    "ask": {
+      "TEST0001": {
+        "paper": {
+          "turns": [
+            {
+              "role": "user",
+              "content": "Synthetic question?"
+            },
+            {
+              "role": "assistant",
+              "content": "Synthetic answer."
+            }
+          ]
+        }
+      }
+    },
+    "research": [
+      {
+        "id": "example-question",
+        "title": "Synthetic research question",
+        "status": "待验证",
+        "understanding": "Synthetic understanding.",
+        "openQuestions": [
+          "Synthetic open question"
+        ],
+        "nextActions": [
+          "Synthetic next action"
+        ],
+        "materials": {
+          "papers": [
+            "TEST0001"
+          ],
+          "evidence": [
+            {
+              "quote": "Synthetic quote",
+              "page": 1,
+              "stance": "支持",
+              "paperKey": "TEST0001"
+            }
+          ],
+          "conversations": []
+        },
+        "evolution": [
+          {
+            "at": 1767225600000,
+            "summary": "Initial understanding",
+            "materials": 1
+          }
+        ],
+        "updatedAt": 1767225600000
+      }
+    ]
+  }
+}

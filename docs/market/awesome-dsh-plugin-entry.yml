@@ -1,0 +1,17 @@
+# TEMPLATE ONLY — not submitted, not hosted, not a live market index.
+# Future path in awesome-dsh-plugin: data/plugins/<owner>__<repo>.yml
+# This is not a submission to the dsh-market application repository.
+url: "https://github.com/<owner>/<repo>"
+name: "dsh-zotero"
+category: "docs"
+author: "<owner>"
+description:
+  en: "Zotero research reading workbench for DeepSeek Harness: layered reading, evidence checks, research questions, write-back. macOS tested; Windows/Linux adapted, not hardware-tested."
+  zh: "DeepSeek Harness 中的 Zotero 科研阅读工作台：分层阅读、证据核验、研究问题与写回。macOS 已实测；Windows/Linux 已适配但未实机验收。"
+compatibility:
+  tested:
+    - "macOS 26.6.2 arm64"
+    - "DeepSeek Harness 0.2.1-rc.5"
+  adapted_not_tested:
+    - "Windows"
+    - "Linux"
