@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { gzipSync } from 'node:zlib'
 
+import { resolvePnpmJs } from './pnpm-entry.mjs'
+
 const root = fileURLToPath(new URL('..', import.meta.url))
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const version = pkg.version
@@ -32,8 +34,16 @@ function runPnpmPack() {
   if (process.platform === 'win32') {
     const found = spawnSync('where', ['pnpm.cmd'], { encoding: 'utf8' })
     if (found.status === 0 && found.stdout.trim() !== '') {
-      const command = found.stdout.split(/\r?\n/)[0].trim()
-      run(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', `"${command}" pack`])
+      const shim = found.stdout.split(/\r?\n/)[0].trim()
+      const js = resolvePnpmJs(shim)
+      if (js !== undefined && existsSync(js)) {
+        console.log(`pnpm JS entry: ${js}`)
+        run(process.execPath, [js, 'pack'])
+        return
+      }
+      // Official cmd fallback: pass one complete command line verbatim.
+      console.log(`pnpm shim fallback: ${shim}`)
+      run(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', `"${shim}" pack`], { windowsVerbatimArguments: true })
       return
     }
   } else {
@@ -83,7 +93,7 @@ const stage = join(tmpdir(), `${pkgName}-source-${process.pid}`)
 rmSync(stage, { recursive: true, force: true })
 mkdirSync(join(stage, pkgName), { recursive: true })
 const target = join(stage, pkgName)
-const files = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
+const files = ['package.json', 'README.md', 'README.en.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
 for (const file of files) cpSync(join(root, file), join(target, file))
 for (const dir of ['lib', 'scripts', 'docs', 'examples', '.github', 'licenses']) cpSync(join(root, dir), join(target, dir), { recursive: true })
 cpSync(join(root, 'client', 'src'), join(target, 'client', 'src'), { recursive: true })

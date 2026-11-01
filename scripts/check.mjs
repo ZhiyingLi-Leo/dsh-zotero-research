@@ -1,5 +1,5 @@
 /** Pure Node checks that can run on macOS, Windows and Linux CI. */
-import { readFile, writeFile, mkdtemp, rm } from 'node:fs/promises'
+import { mkdir, readFile, writeFile, mkdtemp, rm } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -17,6 +17,7 @@ const { locateQuote } = await import(moduleUrl('lib/pdf.js'))
 const { toValueTree } = await import(moduleUrl('lib/value-tree.js'))
 const { valueTreeToMarkdown, renderMarkdown } = await import(moduleUrl('lib/markdown.js'))
 const { ZoteroClient, formatAnnotationSortIndex } = await import(moduleUrl('lib/zotero.js'))
+const { resolvePnpmJs } = await import(moduleUrl('scripts/pnpm-entry.mjs'))
 const hostPlugin = await import(moduleUrl('lib/index.js'))
 
 assert.equal(pkg.version, VERSION, 'package.json and lib/version.js agree')
@@ -223,4 +224,15 @@ for (const needle of ['表达式', '编号', '参数', 'AI 生成笔记', '来�
   assert.ok(exportMd.includes(needle), `export Markdown contains ${needle}`)
 }
 assert.ok(!exportMd.includes('{"expression"'), 'export does not print raw structured JSON')
-console.log('checks passed: version, backup validation, platform open, pdfjs fixture, locateQuote, sort index, structured fields, real export')
+const shimDir = await mkdtemp(join(tmpdir(), 'dsh-zotero-research-shim-'))
+try {
+  await mkdir(join(shimDir, 'node_modules', '.bin'), { recursive: true })
+  await mkdir(join(shimDir, 'node_modules', 'pnpm', 'bin'), { recursive: true })
+  const shim = join(shimDir, 'node_modules', '.bin', 'pnpm.CMD')
+  await writeFile(shim, '@echo off\r\n"%~dp0\\..\\pnpm\\bin\\pnpm.cjs" %*\r\n')
+  await writeFile(join(shimDir, 'node_modules', 'pnpm', 'bin', 'pnpm.cjs'), '// synthetic')
+  assert.equal(resolvePnpmJs(shim), join(shimDir, 'node_modules', 'pnpm', 'bin', 'pnpm.cjs'), 'Windows pnpm.CMD resolves to JS entry')
+} finally {
+  await rm(shimDir, { recursive: true, force: true })
+}
+console.log('checks passed: version, backup validation, platform open, pdfjs fixture, locateQuote, sort index, structured fields, real export, pnpm shim')

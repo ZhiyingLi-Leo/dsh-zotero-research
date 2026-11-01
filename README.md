@@ -1,130 +1,123 @@
 # dsh-zotero-research
 
-Zotero research reading workbench for DeepSeek Harness. It is a DSH plugin, **not** a Zotero XPI: Zotero keeps full PDF reading and native annotation management; the plugin adds layered reading, evidence checks, conversations, research questions and write-back.
+**中文** | [English](README.en.md)
 
-Version: **1.0.0-beta.3** (public beta). macOS is the only platform with real UI acceptance so far; Windows/Linux are adapted but not hardware-tested.
+DeepSeek Harness 中的 Zotero 科研阅读工作台：分层阅读、证据核验、研究问题、对话衔接与成果写回。Zotero 负责完整 PDF 阅读与原生标注管理；本插件不是 Zotero XPI。
 
-## Features
+- 当前版本：**1.0.0-beta.3**
+- 正式仓库：https://github.com/ZhiyingLi-Leo/dsh-zotero-research
+- 安装包：`packages/dsh-zotero-research-1.0.0-beta.3.tgz`
+- 未公开发布 npm 包，也未进入市场。
 
-- Layered reading (quick / rough / deep) with page coverage, missing ranges and explicit "partial text" labels.
-- Evidence preview: cropped page image, quote location labels, Zotero jump; if the PDF helper is unavailable, evidence falls back to text.
-- Unified synthesis over all read batches, with conflicts, uncertainties and citation-backed evidence.
-- Compare (max 6 papers) and relations (max 8), each showing the actual pages read per paper.
-- In-panel Q&A with per-paper/focus history, plus one-click hand-off into a real DSH conversation carrying selected material.
-- Research questions workspace: materials with support/oppose/limit/unverified stances, understanding, open questions, next actions and evolution log.
-- Write-back to Zotero notes/annotations/collections with read-back verification and conflict protection.
-- Markdown export of a paper (synthesis, evidence table, notes/annotations with provenance, raw batches) and of research questions.
-- Backup/restore of plugin data (research questions, analyses+synthesis, Q&A, queue); excludes keys, settings and cache.
+## 界面
 
-## Requirements
+*纯合成数据 / synthetic demo data*
 
-| Component | Tested |
-|---|---|
-| macOS | 26.6.2 arm64: real UI tested; Intel not tested |
-| Windows | adapted (PDF.js text, rundll32 Zotero open); **not hardware-tested** |
-| Linux | adapted (PDF.js text, xdg-open); **not hardware-tested** |
-| DeepSeek Harness | 0.2.1-rc.5 (desktop, Info.plist), tested |
-| Zotero | 10.0.7 with local API enabled |
-| PDF helper | prebuilt arm64, minimum macOS 13.0; needs Xcode Command Line Tools only if rebuilt |
+![阅读概览 / Reader overview](docs/images/reading.jpg)
 
-PDF text, page count, quote location and rectangles use **PDF.js** (pdfjs-dist, Apache-2.0) on every platform. Image rendering uses the optional macOS `build/pdfkit-helper` (arm64, min macOS 13.0); on Windows/Linux or without the helper the reader keeps text evidence and Zotero opening, and never claims an image preview. It does not install Xcode or system tools. Zotero links open with `open -a Zotero` / `rundll32 url.dll,FileProtocolHandler` / `xdg-open` without a shell.
+![证据预览 / Evidence preview](docs/images/evidence.jpg)
 
-## Install
+![研究问题 / Research questions](docs/images/research.jpg)
 
-The public npm scope is undecided; the following is an **example**, not an invitation to install a same-named third-party package:
+截图来自独立演示 profile（合成 Zotero mock + 合成记录），不包含真实文献或笔记。捕获说明见 [demo/README.md](demo/README.md)。
 
-```sh
-# after a future publish (do not run in this beta):
-dsh plugin --profile <profile> add @scope/dsh-zotero-research@beta
-```
+## 功能
 
-`npm install @scope/dsh-zotero-research` only adds a package to a Node project; it does **not** activate the plugin in a Harness profile. Use `dsh plugin --profile <profile> add ...` (local tarball or future published name).
+- 快速/粗读/精读分层结果，显示实际阅读页范围、缺页和“部分正文”依据。
+- 统一综合结论，保留分批矛盾、未解决/待核实与可核对的原文证据。
+- 证据局部/整页预览、定位级别标签、在 Zotero 打开；无法精确定位时只给页码。
+- 研究问题工作区：材料立场、当前理解、未解决问题、下一步、理解演变。
+- 与正式 Harness 对话衔接：文献、小节、证据、标注、多篇对比；材料可检查、可编辑。
+- Zotero 笔记/标注读取与写回，带冲突保护；Markdown 导出（分析、分批、笔记来源、问答）。
+- 插件数据备份/恢复：研究问题、组合分析、问答、队列；不含授权 key、设置与缓存。
 
-Local beta package (web and desktop profiles use the same npm package; install into the profile you actually run):
+## 平台能力
 
-## Install from the local package
+| 能力 | macOS arm64 | Windows | Linux |
+|---|---|---|---|
+| PDF.js 文字、页数、引文定位、PDF 坐标 | 支持 | 支持 | 支持 |
+| PDFKit 图像渲染（证据裁剪） | 可选 helper（macOS 13+） | 使用文字证据 | 使用文字证据 |
+| 在 Zotero 打开 | `open -a Zotero` | `rundll32 url.dll,FileProtocolHandler` | `xdg-open` |
+| 旋转页精确写回 | 页面级，不写精确矩形 | 同左 | 同左 |
+
+PDF 文字与坐标由 PDF.js 提供（三端同一实现）；图像预览是 macOS 的可选增强，缺失时不影响文字证据和 Zotero 跳转。真实 GUI/CI 验收边界见 [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)。
+
+## 安装
+
+本地包：
 
 ```sh
 dsh plugin --profile <profile> add /absolute/path/dsh-zotero-research-1.0.0-beta.3.tgz
 ```
 
-Then restart DSH. The package contains code, docs and the helper; it does not contain any library data, credentials or cache. No dev symlink or developer path is required.
+未来 npm（示例，尚未发布）：
 
-Uninstall:
+```sh
+dsh plugin --profile <profile> add @scope/dsh-zotero-research@beta
+```
+
+`npm install` 只把包加入 Node 项目，不会在 Harness profile 中激活插件；web 与 desktop 分别使用自己的 profile。
+
+## 卸载
 
 ```sh
 dsh plugin --profile <profile> remove dsh-zotero-research
 ```
 
-## First use
+## 升级（保留数据）
 
-Open the Zotero panel → **设置** (also opens automatically on first run). Check, in order:
+1. 先导出插件数据备份。
+2. 正常退出 Harness。
+3. 移除旧依赖：
+   ```sh
+   dsh plugin --profile <profile> remove dsh-zotero
+   ```
+4. 安装新包：
+   ```sh
+   dsh plugin --profile <profile> add /absolute/path/dsh-zotero-research-1.0.0-beta.3.tgz
+   ```
+5. 若 desktop profile 的 `cordis.patch.yml` 有手写旧层 `id/name: dsh-zotero`，仅替换该插件块为 `dsh-zotero-research`，保留其他插件和配置；不要让新旧两个块同时运行。
+6. 重开 Harness。不要删除 `storages/zotero-plugin`。
 
-1. **Zotero and local API** — start Zotero and enable its local API; press 重新检测.
-2. **Model** — defaults to the host configuration; pick another provider/model or restore the host default. Keys are never shown or copied.
-3. **PDF preview** — shows helper architecture and minimum macOS; text fallback is used when unavailable.
-4. **Write authorization** — choose 始终允许 in Zotero's prompt for notes/annotations/collections.
+旧存储目录、旧备份格式 `dsh-zotero-backup`、Zotero 标签 `dsh-zotero`/`dsh-zotero:ai`、localStorage 偏好键均保留兼容；没有自动迁移，恢复只合并不覆盖。
 
-Each analysis shows a preflight with model, paper, page range, data sent and a cost note; it never fabricates an amount. Compare/relations limits (6/8) are enforced before sending.
+## 使用流程
 
-## Data flow, privacy and cost
+1. 打开 Zotero 面板 → 设置：检查 Zotero/本地 API、模型、PDF 能力、写入授权。
+2. 选择文献 → 快速/粗读/精读；预检显示模型、实际页范围与发送内容。
+3. 点击证据查看原文片段；完整阅读或原生高亮时打开 Zotero。
+4. 对结论/方法/局限追问，或带证据/标注进入正式对话。
+5. 在研究问题中积累材料、更新理解，将成果保存回 Zotero 或导出 Markdown。
 
-Only after you press 开始分析 / 生成综合 / 对比 / 关系 / 提问 the plugin sends, depending on the entry point: the paper's title, authors, year, venue, abstract, selected page text, your research focus and prior Q&A; **your Zotero notes and annotations when you bring them into a conversation or research question; extracted evidence and synthesis results when generating a synthesis or carrying them into a conversation; selected page excerpts for compare/relations**. A formal DSH conversation carries only the materials you confirm in the launcher, not the plugin's full history. It does not send the Zotero auth key, the PDF file itself or other credentials. Provider retention is governed by that provider's policy; no guarantee is made here. There is no telemetry or background library upload.
+## 隐私与费用
 
-Plugin data lives in DSH's `storages/zotero-plugin` directory (shown in 设置 → 隐私). PDF previews are cached there and can be cleared separately; clearing never deletes research results.
+- 只有点击分析/综合/对比/关系/提问时，才发送文献标题、作者、年份、来源、摘要、所选页正文、研究关注点与必要历史问答；带入笔记/标注/证据/综合时才会发送这些材料。
+- 不发送 Zotero 授权 key、PDF 附件文件、密码或其他凭据；不含遥测或后台全库上传。
+- 模型服务商保留策略由其自身政策决定，本插件不做未证实保证。
+- 模型调用可能产生费用，插件不估算具体金额；对比最多 6 篇、关系最多 8 篇，发送前提示。
 
-## Backup and restore
+## 备份与恢复
 
-设置 → 备份与恢复 exports a JSON file containing research questions (with stances/evolution), combined analyses (main + supplements + synthesis), Q&A and the reading queue. It is **not** a Zotero library/PDF backup and excludes the auth key, settings and cache. It also does not contain Harness formal-conversation bodies; research-question conversation entries store only the session id/title reference. Compare/relations results exist only in the current browser session and are not backed up. Restore previews counts and conflicts, then merges by primary key: existing records are kept, only missing ones are added; Q&A only appends unseen turns. Invalid or unsupported files are rejected before any write.
+设置 → 备份与恢复：导出插件数据 JSON（研究问题、组合分析、问答、队列）；预览冲突后按主键合并，只追加缺失记录和未见问答，不覆盖人工内容。备份不是 Zotero 原库/PDF 备份，不含正式会话正文、对比/关系结果、授权 key、设置或缓存。
 
-## Upgrade
+## 开发
 
-1. Export a plugin-data backup from 设置 → 备份与恢复.
-2. Remove the old dependency (`dsh plugin --profile <profile> remove dsh-zotero`), install `dsh-zotero-research`, restart DSH. Do not delete `storages/zotero-plugin`.
-3. A desktop profile may also contain a **hand-written plugin layer** in `cordis.patch.yml` with `id: dsh-zotero` / `name: 'dsh-zotero'`. Removing the npm dependency does not remove that block. Replace only that block's id/name with `dsh-zotero-research`, keep all other layers and config, then reinstall the new package. Do not run both blocks at once.
-4. Existing `storages/zotero-plugin` data, old backups (`format: dsh-zotero-backup`), the `dsh-zotero`/`dsh-zotero:ai` note tags and localStorage keys are intentionally kept for compatibility. No automatic migration is performed; the old package and the new one must not run at the same time. Restore the backup only if you need to merge records back (existing records are skipped, never overwritten).
-
-## Research question export
-
-研究问题 → 导出 Markdown creates a readable file with understanding, linked papers/evidence (with stances), open questions, next actions and evolution history.
-
-## Limitations
-
-- Preview-level exact highlighting is not a 1.0 requirement; page-level location is reported honestly.
-- No OCR for scanned PDFs, no chart detection, no real-time Zotero selection.
-- Syntheses and long analyses can take minutes; the UI shows elapsed time and a cancel button.
-- The prebuilt helper is arm64 only; Intel is untested.
-- PDF.js text is ordered top-to-bottom by line geometry. Two-column pages are not guaranteed to be restored to semantic reading order; treat order across columns as approximate.
-- Annotation sort indexes use the PDF page top and page height; rotated pages or missing page geometry use offset 0 instead of a fabricated precise position.
-- Clean-machine installation and full UI verification are not yet performed on a second machine.
-
-## Development
-
-Clean source checkout order (the source package intentionally does not contain the generated `client/client.js`):
+干净源码顺序（源码包不含生成的 `client/client.js`）：
 
 ```sh
 pnpm install
-node client/build.mjs     # generate client/client.js from client/src
-node scripts/check.mjs    # checks read the generated bundle
-node scripts/pack.mjs     # real `pnpm pack` + Node-written source tarball
-node scripts/pack.mjs /path/to/out   # both tarballs into that directory
-pnpm build:helper         # optional, macOS-only PDFKit helper (needs Xcode CLT)
+node client/build.mjs
+node scripts/check.mjs
+node scripts/pack.mjs
+node scripts/install-check.mjs
 ```
 
-`scripts/pack.mjs` prefers a pnpm JavaScript entry (`DSH_PNPM` or `npm_execpath`), then Harness's bundled pnpm at `~/.dsh/dsh-runtimes/<runtime>/dependencies/pnpm/bin/pnpm.cjs`; on Windows it runs a discovered `pnpm.cmd` through `cmd.exe` rather than treating it as a binary. If none is found, install pnpm or set `DSH_PNPM` to the `pnpm.cjs` path.
+`scripts/pack.mjs` 优先使用 `DSH_PNPM`/`npm_execpath`/Harness 内置 pnpm JS 入口；Windows 会解析 `.CMD` shim 找到真正 pnpm JS 入口，仅在必要时用 `cmd.exe` 完整命令回退。合成演示见 [demo/README.md](demo/README.md)。
 
-Source layout: `lib/` (host), `client/` (web UI), `scripts/pdfkit-helper.swift`, `build/pdfkit-helper`.
+## 反馈与许可
 
-## npm, market and data are separate
+- 反馈：`.github/ISSUE_TEMPLATE/bug_report.md`；安全：[SECURITY.md](SECURITY.md)；贡献：[CONTRIBUTING.md](CONTRIBUTING.md)。
+- 验收边界：[docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)。
+- 许可证：MIT，见 [LICENSE](LICENSE)。
 
-- GitHub source, npm distribution, dsh-market listing and plugin-data backup/migration are four different things.
-- Publishing does not list the plugin in dsh-market. Future listing goes through `awesome-dsh-plugin` (`data/plugins/<owner>__<repo>.yml` PR); dsh-market reads that directory. Not the dsh-market app repository.
-- No cloud sync of papers or research data; use the local JSON backup.
-
-## Feedback
-
-See `SECURITY.md` for sensitive reports and `.github/ISSUE_TEMPLATE/bug_report.md` for defects. Repository URL, maintainer and contact are **to be filled in** before publishing; this beta does not imply official endorsement.
-
-## License
-
-MIT. See `LICENSE`.
+[English](README.en.md)
