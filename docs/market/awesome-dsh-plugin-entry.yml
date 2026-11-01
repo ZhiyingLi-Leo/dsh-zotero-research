@@ -2,7 +2,7 @@
 # Future path in awesome-dsh-plugin: data/plugins/<owner>__<repo>.yml
 # This is not a submission to the dsh-market application repository.
 url: "https://github.com/<owner>/<repo>"
-name: "dsh-zotero"
+name: "dsh-zotero-research"
 category: "docs"
 author: "<owner>"
 description:

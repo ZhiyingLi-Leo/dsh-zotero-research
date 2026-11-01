@@ -1,7 +1,7 @@
 # dsh bundle patch: inserts the Zotero workspace into a profile's layer stack.
 - insert:
-    - id: dsh-zotero
-      name: 'dsh-zotero'
+    - id: dsh-zotero-research
+      name: 'dsh-zotero-research'
       config:
         provider: deepseek-official
         model: deepseek-flash

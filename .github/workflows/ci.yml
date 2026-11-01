@@ -20,5 +20,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: node client/build.mjs
       - run: node scripts/check.mjs
       - run: node scripts/pack.mjs

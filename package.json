@@ -1,7 +1,7 @@
 {
-  "name": "dsh-zotero",
-  "version": "1.0.0-beta.2",
-  "description": "Zotero research reading workbench for DeepSeek Harness: layered reading, evidence checks, conversations, research questions and write-back.",
+  "name": "dsh-zotero-research",
+  "version": "1.0.0-beta.3",
+  "description": "Zotero research reading workbench for DeepSeek Harness: layered reading, evidence checks, research questions and write-back.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

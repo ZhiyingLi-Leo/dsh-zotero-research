@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-beta.3 — 2026-11-01
+
+- Internal package, plugin ID, HTTP route prefix, client module ID and packaging names renamed to `dsh-zotero-research`.
+- Storage directory `storages/zotero-plugin`, legacy backup format `dsh-zotero-backup`, Zotero tags `dsh-zotero`/`dsh-zotero:ai` and localStorage preference keys are kept as explicit compatibility data; no auto-migration.
+- Upgrade requires removing the old `dsh-zotero` package and installing `dsh-zotero-research`; do not run both.
+
 ## 1.0.0-beta.2 — 2026-11-01
 
 - Standard npm/pnpm tarball via `pnpm pack`, with Node-based cross-platform source packaging (`scripts/pack.mjs`).

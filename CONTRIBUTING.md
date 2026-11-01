@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve dsh-zotero.
+Thanks for helping improve dsh-zotero-research.
 
 - Use issues for bugs and proposals; keep reports free of credentials, private paper text and personal paths.
 - For code changes: `pnpm install`, `pnpm build`, run a focused manual check in an isolated DSH profile, and keep the true Zotero library untouched.

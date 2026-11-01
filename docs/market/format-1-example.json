@@ -3,7 +3,7 @@
   "format": 1,
   "plugins": [
     {
-      "name": "dsh-zotero",
+      "name": "dsh-zotero-research",
       "url": "https://github.com/<owner>/<repo>",
       "category": "docs",
       "description": "Zotero research reading workbench for DeepSeek Harness (macOS tested; Windows/Linux adapted, not hardware-tested)."

@@ -1,6 +1,6 @@
 /** Fetch and SSE helpers for the Zotero panel. */
 
-const BASE = '/dsh-zotero'
+const BASE = '/dsh-zotero-research'
 
 export async function api(path, options = {}) {
   const response = await fetch(`${BASE}${path}`, {

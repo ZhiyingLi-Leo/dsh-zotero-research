@@ -17,8 +17,20 @@ const { locateQuote } = await import(moduleUrl('lib/pdf.js'))
 const { toValueTree } = await import(moduleUrl('lib/value-tree.js'))
 const { valueTreeToMarkdown, renderMarkdown } = await import(moduleUrl('lib/markdown.js'))
 const { ZoteroClient, formatAnnotationSortIndex } = await import(moduleUrl('lib/zotero.js'))
+const hostPlugin = await import(moduleUrl('lib/index.js'))
 
 assert.equal(pkg.version, VERSION, 'package.json and lib/version.js agree')
+assert.equal(pkg.name, 'dsh-zotero-research', 'package name')
+assert.equal(hostPlugin.name, pkg.name, 'host export name matches package')
+const patchText = await readFile(join(root, 'cordis.patch.yml'), 'utf8')
+assert.match(patchText, new RegExp(`id:\\s*${pkg.name}`), 'cordis.patch id matches package')
+assert.match(patchText, new RegExp(`name:\\s*'${pkg.name}'`), 'cordis.patch name matches package')
+const clientBundle = await readFile(join(root, 'client/client.js'), 'utf8')
+assert.ok(clientBundle.includes(`id: '${pkg.name}'`), 'client ModuleLoader id matches package')
+assert.ok(!clientBundle.includes("id: 'dsh-zotero'"), 'client loader has no old id')
+assert.ok(clientBundle.includes(`var BASE = "/${pkg.name}"`), 'client API base matches package')
+const clientSource = await readFile(join(root, 'client/src/index.jsx'), 'utf8')
+assert.ok(clientSource.includes(`export const name = '${pkg.name}'`), 'client export name matches package')
 assert.match(pkg.engines.dsh, /0\.2\.1-rc\.5/, 'DSH engine includes tested prerelease')
 
 const sample = JSON.parse(await readFile(join(root, 'examples/sample-backup.json'), 'utf8'))
@@ -90,7 +102,7 @@ function textStream(lines) {
   return lines.map(([x, y, size, text]) => `BT /F1 ${size} Tf ${x} ${y} Td (${text}) Tj ET`).join('\n')
 }
 
-const dir = await mkdtemp(join(tmpdir(), 'dsh-zotero-check-'))
+const dir = await mkdtemp(join(tmpdir(), 'dsh-zotero-research-check-'))
 try {
   const pdfPath = join(dir, 'fixture.pdf')
   const pages = [

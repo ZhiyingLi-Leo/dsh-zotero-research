@@ -17,7 +17,7 @@ const out = await build({
 })
 
 const code = out.outputFiles[0].text
-const wrapped = `window.__ModuleLoader__.load({\n  id: 'dsh-zotero',\n  factory: (require) => {\n    var module = { exports: {} };\n    var exports = module.exports;\n${code}\n    return module.exports;\n  },\n});\n`
+const wrapped = `window.__ModuleLoader__.load({\n  id: 'dsh-zotero-research',\n  factory: (require) => {\n    var module = { exports: {} };\n    var exports = module.exports;\n${code}\n    return module.exports;\n  },\n});\n`
 await mkdir('client', { recursive: true })
 await writeFile('client/client.js', wrapped)
 console.log(`client/client.js written (${(wrapped.length / 1024).toFixed(1)} KiB)`)

@@ -1,4 +1,4 @@
-// PDF evidence helper for dsh-zotero.
+// PDF evidence helper for dsh-zotero-research.
 //
 // Uses macOS PDFKit to (a) render a page to PNG, optionally with highlight
 // rectangles, and (b) locate a quoted string and return its page + rectangles.

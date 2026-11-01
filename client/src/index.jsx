@@ -4,6 +4,7 @@ import { renderMarkdown } from './markdown.js'
 import { CSS } from './styles.js'
 import { cumulativeCoverage, formatRanges } from './coverage.js'
 import { toValueTree } from '../../lib/value-tree.js'
+import { VERSION } from '../../lib/version.js'
 
 const h = React.createElement
 
@@ -492,7 +493,7 @@ export function App() {
       // `retain().ready` resolves with that binding, so use its value directly.
       let binding
       if (typeof sessions.retain === 'function') {
-        reference = sessions.retain(sessionId, { source: 'dsh-zotero' })
+        reference = sessions.retain(sessionId, { source: 'dsh-zotero-research' })
         binding = await Promise.race([
           reference.ready,
           new Promise((_, reject) => setTimeout(() => reject(new Error('会话打开超时（15s）')), 15000)),
@@ -811,7 +812,7 @@ function Nav({ status, collections, collection, onSelectCollection, query, setQu
         h('div', { className: 'dz-row', style: { marginTop: 4 } },
           h(Btn, { small: true, onClick: onResearch }, '研究问题'),
           h(Btn, { small: true, onClick: onSettings }, '设置')),
-        h('div', { className: 'dz-sub' }, `v${status?.version ?? '1.0.0-beta.2'} · 公测`)),
+        h('div', { className: 'dz-sub' }, `v${status?.version ?? VERSION} · 公测`)),
       h('button', { className: 'dz-iconbtn', onClick: onCollapse, title: '收起导航' }, '«'),
     ),
     h('div', { className: 'dz-pad', style: { paddingBottom: 4 } },
@@ -2049,7 +2050,7 @@ function Viewer({ viewer, canWrite, onClose, onOpenZotero, onCreateHighlight, on
     ? viewer.previewRects
     : viewer.coordinateSpace === 'pdf' ? [] : (viewer.rects ?? [])
   const src = canImage
-    ? `/dsh-zotero/evidence.png?attachment=${encodeURIComponent(viewer.attachmentKey)}&page=${Math.max(0, viewer.page - 1)}&mode=${mode}&scale=${scale}${imageRects.length > 0 ? `&rects=${encodeURIComponent(JSON.stringify(imageRects))}` : ''}`
+    ? `/dsh-zotero-research/evidence.png?attachment=${encodeURIComponent(viewer.attachmentKey)}&page=${Math.max(0, viewer.page - 1)}&mode=${mode}&scale=${scale}${imageRects.length > 0 ? `&rects=${encodeURIComponent(JSON.stringify(imageRects))}` : ''}`
     : null
 
   return h('div', { className: 'dz-overlay', onMouseDown: (event) => { if (event.target === event.currentTarget) onClose() } },
@@ -2768,7 +2769,7 @@ function SettingsModal({ status, modelInfo, onReload, onAuthorize, authBusy, onC
       const url = URL.createObjectURL(blob)
       const anchor = document.createElement('a')
       anchor.href = url
-      anchor.download = `dsh-zotero-backup-${new Date().toISOString().slice(0, 10)}.json`
+      anchor.download = `dsh-zotero-research-backup-${new Date().toISOString().slice(0, 10)}.json`
       anchor.click()
       URL.revokeObjectURL(url)
       onToast('备份已导出（不含授权 key、设置与 PDF 缓存）')
@@ -2868,7 +2869,7 @@ function SettingsModal({ status, modelInfo, onReload, onAuthorize, authBusy, onC
     h('div', { className: 'dz-modal' },
       h('div', { className: 'dz-head' },
         h('span', { className: 'dz-title' }, '设置'),
-        h('span', { className: 'dz-chip' }, `v${status?.version ?? '1.0.0-beta.2'}`),
+        h('span', { className: 'dz-chip' }, `v${status?.version ?? VERSION}`),
         h(Btn, { small: true, onClick: onClose }, '关闭'),
       ),
       h('div', { className: 'dz-row dz-wrap', style: { padding: '0 12px' } },
@@ -2952,8 +2953,8 @@ function SettingsModal({ status, modelInfo, onReload, onAuthorize, authBusy, onC
           ),
         ),
         tab === 'about' && h('div', null,
-          h('h3', null, 'dsh-zotero'),
-          h('p', null, `版本：${status?.version ?? '1.0.0-beta.2'}（公测）`),
+          h('h3', null, 'dsh-zotero-research'),
+          h('p', null, `版本：${status?.version ?? '1.0.0-beta.3'}（公测）`),
           h('p', null, '定位：运行在 DeepSeek Harness 中、连接 Zotero 的科研阅读工作台；不是安装到 Zotero 的 XPI 插件。'),
           h('p', null, '许可证：MIT。Zotero 负责完整 PDF 阅读与原生标注管理；插件负责分层阅读、证据核验、对话、研究问题与成果写回。'),
           h('p', { className: 'dz-sub' }, `平台：${status?.capabilities?.pdfDetail?.hostArch ?? '未知架构'}；PDFKit helper 最低 macOS ${status?.capabilities?.pdfDetail?.minMacOS ?? '13.0'}（Apple Silicon 已实测，Intel 未实测）。`),
@@ -3033,7 +3034,7 @@ function PreflightModal({ request, status, onClose, onConfirm }) {
 /* Slot registration                                                   */
 /* ------------------------------------------------------------------ */
 
-export const name = 'dsh-zotero'
+export const name = 'dsh-zotero-research'
 export const inject = ['slots']
 
 function ZoteroIcon({ size = 16 }) {
@@ -3052,13 +3053,13 @@ export function apply(ctx) {
   pluginCtx = ctx
   ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({
     name: 'sidebar.panellist',
-    id: 'dsh-zotero',
+    id: 'dsh-zotero-research',
     order: 2,
     label: () => 'Zotero',
   }, ZoteroIcon))
 
   ctx.slots.inject('main', () => ctx.slots.register({
     name: 'main',
-    key: 'dsh-zotero',
+    key: 'dsh-zotero-research',
   }, () => h('div', { style: { height: '100%', minHeight: 0, display: 'flex' } }, h(App))))
 }

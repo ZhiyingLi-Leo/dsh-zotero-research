@@ -1,16 +1,8 @@
 # dsh-zotero-research
 
-DeepSeek Harness Zotero 科研阅读工作台。私有仓库，尚未公开发布。
-
-当前内部 npm 包名仍为 `dsh-zotero`，版本 `1.0.0-beta.2`。仓库名称与包名独立；安装兼容性保持不变。macOS 已实测，Windows/Linux 已适配但未实测。
-
-本地安装包见 `packages/dsh-zotero-1.0.0-beta.2.tgz`；用 `dsh plugin --profile <profile> add /absolute/path/to/package.tgz` 安装并重启 Harness。没有发布 npm、GitHub Release 或插件市场收录。
-
-# dsh-zotero
-
 Zotero research reading workbench for DeepSeek Harness. It is a DSH plugin, **not** a Zotero XPI: Zotero keeps full PDF reading and native annotation management; the plugin adds layered reading, evidence checks, conversations, research questions and write-back.
 
-Version: **1.0.0-beta.2** (public beta). macOS is the only platform with real UI acceptance so far; Windows/Linux are adapted but not hardware-tested.
+Version: **1.0.0-beta.3** (public beta). macOS is the only platform with real UI acceptance so far; Windows/Linux are adapted but not hardware-tested.
 
 ## Features
 
@@ -43,21 +35,17 @@ The public npm scope is undecided; the following is an **example**, not an invit
 
 ```sh
 # after a future publish (do not run in this beta):
-dsh plugin --profile <profile> add @scope/dsh-zotero@beta
+dsh plugin --profile <profile> add @scope/dsh-zotero-research@beta
 ```
 
-`npm install @scope/dsh-zotero` only adds a package to a Node project; it does **not** activate the plugin in a Harness profile. Use `dsh plugin --profile <profile> add ...` (local tarball or future published name).
+`npm install @scope/dsh-zotero-research` only adds a package to a Node project; it does **not** activate the plugin in a Harness profile. Use `dsh plugin --profile <profile> add ...` (local tarball or future published name).
 
 Local beta package (web and desktop profiles use the same npm package; install into the profile you actually run):
-
-```sh
-dsh plugin --profile <profile> add /absolute/path/dsh-zotero-1.0.0-beta.2.tgz
-```
 
 ## Install from the local package
 
 ```sh
-dsh plugin --profile <profile> add /absolute/path/dsh-zotero-1.0.0-beta.2.tgz
+dsh plugin --profile <profile> add /absolute/path/dsh-zotero-research-1.0.0-beta.3.tgz
 ```
 
 Then restart DSH. The package contains code, docs and the helper; it does not contain any library data, credentials or cache. No dev symlink or developer path is required.
@@ -65,7 +53,7 @@ Then restart DSH. The package contains code, docs and the helper; it does not co
 Uninstall:
 
 ```sh
-dsh plugin --profile <profile> remove dsh-zotero
+dsh plugin --profile <profile> remove dsh-zotero-research
 ```
 
 ## First use
@@ -92,8 +80,9 @@ Plugin data lives in DSH's `storages/zotero-plugin` directory (shown in 设置 �
 ## Upgrade
 
 1. Export a plugin-data backup from 设置 → 备份与恢复.
-2. Remove the old plugin (`dsh plugin --profile <profile> remove dsh-zotero`), install the new tarball, restart DSH.
-3. Existing `storages/zotero-plugin` data is kept; no automatic migration is performed. Restore the backup only if you need to merge records back (existing records are skipped, never overwritten).
+2. Remove the old dependency (`dsh plugin --profile <profile> remove dsh-zotero`), install `dsh-zotero-research`, restart DSH. Do not delete `storages/zotero-plugin`.
+3. A desktop profile may also contain a **hand-written plugin layer** in `cordis.patch.yml` with `id: dsh-zotero` / `name: 'dsh-zotero'`. Removing the npm dependency does not remove that block. Replace only that block's id/name with `dsh-zotero-research`, keep all other layers and config, then reinstall the new package. Do not run both blocks at once.
+4. Existing `storages/zotero-plugin` data, old backups (`format: dsh-zotero-backup`), the `dsh-zotero`/`dsh-zotero:ai` note tags and localStorage keys are intentionally kept for compatibility. No automatic migration is performed; the old package and the new one must not run at the same time. Restore the backup only if you need to merge records back (existing records are skipped, never overwritten).
 
 ## Research question export
 
@@ -111,13 +100,15 @@ Plugin data lives in DSH's `storages/zotero-plugin` directory (shown in 设置 �
 
 ## Development
 
+Clean source checkout order (the source package intentionally does not contain the generated `client/client.js`):
+
 ```sh
 pnpm install
-pnpm build                # client bundle
-pnpm build:helper         # macOS-only PDFKit helper (needs Xcode CLT)
-node scripts/check.mjs    # pure cross-platform checks + synthetic PDFs
+node client/build.mjs     # generate client/client.js from client/src
+node scripts/check.mjs    # checks read the generated bundle
 node scripts/pack.mjs     # real `pnpm pack` + Node-written source tarball
 node scripts/pack.mjs /path/to/out   # both tarballs into that directory
+pnpm build:helper         # optional, macOS-only PDFKit helper (needs Xcode CLT)
 ```
 
 `scripts/pack.mjs` prefers a pnpm JavaScript entry (`DSH_PNPM` or `npm_execpath`), then Harness's bundled pnpm at `~/.dsh/dsh-runtimes/<runtime>/dependencies/pnpm/bin/pnpm.cjs`; on Windows it runs a discovered `pnpm.cmd` through `cmd.exe` rather than treating it as a binary. If none is found, install pnpm or set `DSH_PNPM` to the `pnpm.cjs` path.

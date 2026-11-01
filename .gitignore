@@ -16,6 +16,7 @@ ask.json
 research.json
 *.backup.json
 dsh-zotero-backup-*.json
+dsh-zotero-research-backup-*.json
 .restore-*/
 *.rollback.tmp
 *.tmp
@@ -48,5 +49,6 @@ Thumbs.db
 !examples/*.json
 !examples/*.md
 
-# Reviewed local beta installer
-!packages/dsh-zotero-1.0.0-beta.2.tgz
+# Generated bundle and reviewed local installer
+/client/client.js
+!packages/dsh-zotero-research-1.0.0-beta.3.tgz

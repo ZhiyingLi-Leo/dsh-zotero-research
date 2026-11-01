@@ -12,6 +12,7 @@ import { gzipSync } from 'node:zlib'
 const root = fileURLToPath(new URL('..', import.meta.url))
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const version = pkg.version
+const pkgName = pkg.name
 const out = process.argv[2] ?? root
 
 function run(command, args, options = {}) {
@@ -41,35 +42,7 @@ function runPnpmPack() {
   throw new Error('找不到 pnpm：请安装 pnpm，或设置 DSH_PNPM 指向 pnpm.cjs；Harness 内置运行时位于 ~/.dsh/dsh-runtimes/<runtime>/dependencies/pnpm/bin/pnpm.cjs')
 }
 
-// 1. client bundle
-run(process.execPath, [join(root, 'client', 'build.mjs')])
-
-// 2. real npm-style tarball through pnpm pack
-mkdirSync(out, { recursive: true })
-rmSync(join(root, `dsh-zotero-${version}.tgz`), { force: true })
-runPnpmPack()
-const installName = `dsh-zotero-${version}.tgz`
-if (!existsSync(join(root, installName))) throw new Error(`pnpm pack did not produce ${installName}`)
-if (out !== root) {
-  copyFileSync(join(root, installName), join(out, installName))
-  rmSync(join(root, installName))
-}
-
-// 3. source package from an explicit whitelist
-const stage = join(tmpdir(), `dsh-zotero-source-${process.pid}`)
-rmSync(stage, { recursive: true, force: true })
-mkdirSync(join(stage, 'dsh-zotero'), { recursive: true })
-const target = join(stage, 'dsh-zotero')
-const files = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
-for (const file of files) cpSync(join(root, file), join(target, file))
-for (const dir of ['lib', 'scripts', 'docs', 'examples', '.github', 'licenses']) cpSync(join(root, dir), join(target, dir), { recursive: true })
-cpSync(join(root, 'client', 'src'), join(target, 'client', 'src'), { recursive: true })
-cpSync(join(root, 'client', 'build.mjs'), join(target, 'client', 'build.mjs'))
-mkdirSync(join(target, 'build'), { recursive: true })
-cpSync(join(root, 'build', 'pdfkit-helper'), join(target, 'build', 'pdfkit-helper'))
-cpSync(join(root, 'build', 'pdfkit-helper.json'), join(target, 'build', 'pdfkit-helper.json'))
-
-const FORBIDDEN = /(^|\/)(\.git|node_modules|storages|state\.json|analyses\.json|ask\.json|research\.json|\.env[^/]*|credentials[^/]*|.*\.pem|.*\.key|.*\.pdf|.*\.caj|.*\.backup\.json|dsh-zotero-backup-.*\.json|\.restore-[^/]*|.*\.tmp|.*\.tgz|.*\.tar\.gz)$/
+const FORBIDDEN = /(^|\/)(\.git|node_modules|storages|state\.json|analyses\.json|ask\.json|research\.json|\.env[^/]*|credentials[^/]*|.*\.credentials\.yaml|.*\.pem|.*\.key|.*\.pdf|.*\.caj|.*\.backup\.json|dsh-zotero-backup-.*\.json|dsh-zotero-research-backup-.*\.json|\.restore-[^/]*|.*\.tmp|.*\.tgz|.*\.tar\.gz)$/
 function scan(dir) {
   const hits = []
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -79,6 +52,46 @@ function scan(dir) {
   }
   return hits
 }
+// 1. client bundle
+run(process.execPath, [join(root, 'client', 'build.mjs')])
+
+// The install tarball is produced by pnpm from package.json "files". Scan every
+// whitelisted input before packing so the same sensitive-file rules apply to
+// both artifacts (not only the source stage).
+const installInputs = []
+for (const entry of pkg.files ?? []) {
+  const full = join(root, entry)
+  if (!existsSync(full)) continue
+  if (statSync(full).isDirectory()) installInputs.push(...scan(full))
+  else if (FORBIDDEN.test(basename(full))) installInputs.push(full)
+}
+if (installInputs.length > 0) { console.error('forbidden install files:', installInputs); process.exit(1) }
+
+// 2. real npm-style tarball through pnpm pack
+mkdirSync(out, { recursive: true })
+rmSync(join(root, `${pkgName}-${version}.tgz`), { force: true })
+runPnpmPack()
+const installName = `${pkgName}-${version}.tgz`
+if (!existsSync(join(root, installName))) throw new Error(`pnpm pack did not produce ${installName}`)
+if (out !== root) {
+  copyFileSync(join(root, installName), join(out, installName))
+  rmSync(join(root, installName))
+}
+
+// 3. source package from an explicit whitelist
+const stage = join(tmpdir(), `${pkgName}-source-${process.pid}`)
+rmSync(stage, { recursive: true, force: true })
+mkdirSync(join(stage, pkgName), { recursive: true })
+const target = join(stage, pkgName)
+const files = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', '.gitignore', 'cordis.patch.yml', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']
+for (const file of files) cpSync(join(root, file), join(target, file))
+for (const dir of ['lib', 'scripts', 'docs', 'examples', '.github', 'licenses']) cpSync(join(root, dir), join(target, dir), { recursive: true })
+cpSync(join(root, 'client', 'src'), join(target, 'client', 'src'), { recursive: true })
+cpSync(join(root, 'client', 'build.mjs'), join(target, 'client', 'build.mjs'))
+mkdirSync(join(target, 'build'), { recursive: true })
+cpSync(join(root, 'build', 'pdfkit-helper'), join(target, 'build', 'pdfkit-helper'))
+cpSync(join(root, 'build', 'pdfkit-helper.json'), join(target, 'build', 'pdfkit-helper.json'))
+
 const forbidden = scan(target)
 if (forbidden.length > 0) { console.error('forbidden source files:', forbidden); process.exit(1) }
 
@@ -128,10 +141,10 @@ function walk(dir, base, parts) {
   }
 }
 const parts = []
-walk(target, 'dsh-zotero', parts)
+walk(target, pkgName, parts)
 parts.push(Buffer.alloc(1024))
 const tar = gzipSync(Buffer.concat(parts), { level: 9 })
-const sourceName = `dsh-zotero-${version}-source.tar.gz`
+const sourceName = `${pkgName}-${version}-source.tar.gz`
 writeFileSync(join(out, sourceName), tar)
 rmSync(stage, { recursive: true, force: true })
 
