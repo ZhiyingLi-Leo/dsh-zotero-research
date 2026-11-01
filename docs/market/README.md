@@ -1,7 +1,9 @@
-# Market submission preparation (not submitted)
+# 插件市场收录 / Catalog submission
 
-- Current machine has `dshmarket@1.73.5`. Publishing an npm package does **not** add it to the market.
-- The market reads the **awesome-dsh-plugin** directory, not the dsh-market application repository.
-- Future process: fork `awesome-dsh-plugin/awesome-dsh-plugin`, add `data/plugins/<owner>__<repo>.yml`, open a PR, wait for maintainer merge; dsh-market syncs afterwards. No 24-hour guarantee.
-- Do not submit to the dsh-market app repository and do not publish anything in this round.
-- Templates here are local only; `format-1-example.json` is illustrative, not an official index.
+市场读取 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 目录。发布 npm 包不会自动收录；目录 PR 合并后，由市场同步。
+
+提交文件：`data/plugins/ZhiyingLi-Leo__dsh-zotero-research.yml`，内容见 [awesome-dsh-plugin-entry.yml](awesome-dsh-plugin-entry.yml)。只提交该文件，不修改其他插件或生成的 README。
+
+安装来源、仓库年龄要求和提交步骤见 [发布说明](../PUBLISHING.md)。
+
+The market reads the awesome-dsh-plugin catalog. Publishing to npm does not create a listing. Add the single YAML entry to the catalog, then open a pull request. Market synchronization follows catalog acceptance.
